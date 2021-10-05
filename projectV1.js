@@ -42,17 +42,28 @@ TAB = JSON.stringify([
 
 PEOPLE = JSON.parse(TAB);
 
-function filterGender(tab, gender) {
-    return tab.filter(item => item.sex == gender);
+
+function filter(tab, gender, date) {
+    let ret = [];
+
+    for (let i = 0; i < tab.length; i++) {
+        if ((gender == null || tab[i].sex == gender) && (date == null || tab[i].born <= date)) {
+            ret.push(tab[i]);
+        }
+    }
+
+    return ret;
 }
 
-function filterBirth(tab, date) {
-    return tab.filter(item => item.born <= date);
-}
 
 function getAgeSum(tab) {
-    let ret = tab.map(x => x.died - x.born).reduce((x, y) => x + y);
+    let ret = 0;
+    for (let i = 0; i < tab.length; i++) {
+        let age = tab[i].died - tab[i].born;
+        ret += age;
+    }
     return ret;
+
 
 }
 
@@ -65,27 +76,25 @@ function getMeanAge(tab) {
 
 }
 
-tab = filterGender(PEOPLE, "m");
+tab = filter(PEOPLE, "m", null);
 ageSum = getAgeSum(tab);
 meanAge = getMeanAge(tab);
 console.log(`L'âge total des hommes est :  ${ageSum}`);
 console.log(`L'âge moyen des hommes est :  ${meanAge}`);
 
-tab = filterGender(PEOPLE, "f");
+tab = filter(PEOPLE, "f", null);
 ageSum = getAgeSum(tab);
 meanAge = getMeanAge(tab);
 console.log(`L'âge total des femmes est :  ${ageSum}`);
 console.log(`L'âge moyen des femmes est :  ${meanAge}`);
 
-tab = filterGender(PEOPLE, "m");
-tab = filterBirth(tab, 1900);
+tab = filter(PEOPLE, "m", 1900);
 ageSum = getAgeSum(tab);
 meanAge = getMeanAge(tab);
 console.log(`L'âge total des hommes nés avant 1900 est :  ${ageSum}`);
 console.log(`L'âge moyen des hommes nés avant 1900 est :  ${meanAge}`);
 
-tab = filterGender(PEOPLE, "f");
-tab = filterBirth(tab, 1900);
+tab = filter(PEOPLE, "f", 1900);
 ageSum = getAgeSum(tab);
 meanAge = getMeanAge(tab);
 console.log(`L'âge total des femmes nées avant 1900 est :  ${ageSum}`);
